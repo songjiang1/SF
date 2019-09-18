@@ -73,7 +73,6 @@
   <ItemGroup>
     <Compile Include="Attributes\DisableThrottingAttribute.cs" />
     <Compile Include="Attributes\EnableThrottlingAttribute.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Configuration\ThrottlePolicyConfiguration.cs" />
     <Compile Include="Configuration\ThrottlePolicyRuleConfigurationCollection.cs" />
     <Compile Include="Configuration\ThrottlePolicyRuleConfigurationElement.cs" />
