@@ -1,0 +1,54 @@
+﻿using sys.Dal.Entity.TVShowManage;
+using sys.Util.WebControl;
+using System.Collections.Generic;
+
+namespace sys.Dal.IService.TVShowManage
+{
+    /// <summary>
+    /// 版 本 2.0
+    /// Copyright (c)  
+    /// 创建人：宋江
+    /// 日 期：2015.12.7 16:40
+    /// 描 述： 
+    /// </summary>
+    public interface IPageInfoService
+    {
+        #region 获取数据
+        /// <summary>
+        /// 会议列表
+        /// </summary>
+        /// <param name="pagination">分页</param>
+        /// <param name="queryJson">查询参数</param>
+        /// <returns></returns>
+        IEnumerable<PageInfoEntity> GetPageList(Pagination pagination, string queryJson);
+        /// <summary>
+        /// 获取全部实体
+        /// </summary> 
+        /// <returns></returns>
+        IEnumerable<PageInfoEntity> GetList();
+        /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="keyValue">主键值</param>
+        /// <returns></returns>
+        PageInfoEntity GetEntity(string keyValue);
+        #endregion
+
+        #region 提交数据
+        /// <summary>
+        /// 删除会议
+        /// </summary>
+        /// <param name="keyValue">主键</param>
+        void RemoveForm(string keyValue);
+        /// <summary>
+        /// 保存会议表单（新增、修改）
+        /// </summary>
+        /// <param name="keyValue">主键值</param>
+        /// <param name="newsEntity">会议实体</param>
+        /// <returns></returns>
+        void SaveForm(string keyValue, PageInfoEntity PageInfoEntity); 
+
+        
+        #endregion
+    }
+}
