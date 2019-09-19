@@ -303,7 +303,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 if (this.SqlSugarPK_CheckBox.Checked && this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+        
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -314,7 +314,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else if (this.SqlSugarPK_CheckBox.Checked && !this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -325,7 +325,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -338,7 +338,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 if (this.SqlSugarPK_CheckBox.Checked && this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+        
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -349,7 +349,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else if (this.SqlSugarPK_CheckBox.Checked && !this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -360,7 +360,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else if (!this.SqlSugarPK_CheckBox.Checked && this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+        
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -371,7 +371,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -384,7 +384,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 if (this.SqlSugarBZL_CheckBox.Checked)
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -395,7 +395,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                                 else
                                 {
                                     codeString.Append($@"
-        private -dbType- _-colName-;
+         
         /// <summary>
         /// -zhuShi-
         /// </summary>
@@ -406,7 +406,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                             else
                             {
                                 codeString.Append($@"
-        private -dbType- _-colName-;
+       
         /// <summary>
         /// -zhuShi-
         /// </summary>
