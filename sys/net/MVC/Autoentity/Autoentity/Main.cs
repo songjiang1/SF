@@ -295,7 +295,8 @@ namespace {this.Namespace_TextBox.Text.Trim()}
                             if (uu["OBJNAME"].ToString().ToUpper() == dr["ColumnName"].ToString().ToUpper())
                                 zhuShi = uu["VALUE"].ToString();
                         }
-                        if (this.GetCus_TextBox.Text.Trim() == ";" && this.GetCus_TextBox.Text.Trim() == ";")
+                         
+                        if (this.radioButton1.Checked)
                         {
                             if ((bool)dr["IsKey"] && !(bool)dr["IsIdentity"])
                             {
@@ -307,7 +308,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                                 }
                                 else if (this.SqlSugarPK_CheckBox.Checked && !this.SqlSugarBZL_CheckBox.Checked)
@@ -318,7 +319,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                                 }
                                 else
@@ -328,7 +329,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// <summary>
         /// -zhuShi-
         /// </summary>
-        public -dbType- -colName- {{ get {getString} set  {setString} }}
+        public -dbType- -colName- {{ get ; set  ; }}
 ");
                                 }
                             }
@@ -342,7 +343,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                                 }
                                 else if (this.SqlSugarPK_CheckBox.Checked && !this.SqlSugarBZL_CheckBox.Checked)
@@ -353,7 +354,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                                 }
                                 else if (!this.SqlSugarPK_CheckBox.Checked && this.SqlSugarBZL_CheckBox.Checked)
@@ -364,7 +365,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsIdentity = true)]
-        public -dbType- -colName- {{ get {getString}  set {setString} }}
+        public -dbType- -colName- {{ get ;  set ; }}
 ");
                                 }
                                 else
@@ -374,7 +375,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// <summary>
         /// -zhuShi-
         /// </summary>
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ;}}
 ");
                                 }
                             }
@@ -388,7 +389,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// -zhuShi-
         /// </summary>
         [SugarColumn(IsIdentity = true)]
-        public -dbType- -colName- {{ get {getString}  set {setString} }}
+        public -dbType- -colName- {{ get ;  set ; }}
 ");
                                 }
                                 else
@@ -398,7 +399,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// <summary>
         /// -zhuShi-
         /// </summary>
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                                 }
                             }
@@ -409,7 +410,7 @@ namespace {this.Namespace_TextBox.Text.Trim()}
         /// <summary>
         /// -zhuShi-
         /// </summary>
-        public -dbType- -colName- {{ get {getString} set {setString} }}
+        public -dbType- -colName- {{ get ; set ; }}
 ");
                             }
                         }

@@ -32,6 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Tools = new System.Windows.Forms.MenuStrip();
             this.连接ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SqlServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MySQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OracleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SQLiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PostgreSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LinkInfo_TreeView = new System.Windows.Forms.TreeView();
             this.TreeNode_ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -61,11 +66,8 @@
             this.Using_TextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.UsingTip = new System.Windows.Forms.ToolTip(this.components);
-            this.SqlServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MySQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OracleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SQLiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PostgreSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.Tools.SuspendLayout();
             this.TreeNode_ContextMenuStrip.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -95,6 +97,43 @@
             this.连接ToolStripMenuItem.Name = "连接ToolStripMenuItem";
             this.连接ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.连接ToolStripMenuItem.Text = "连接";
+            // 
+            // SqlServerToolStripMenuItem
+            // 
+            this.SqlServerToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_sqlserver_32px_1097092_easyicon_net;
+            this.SqlServerToolStripMenuItem.Name = "SqlServerToolStripMenuItem";
+            this.SqlServerToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.SqlServerToolStripMenuItem.Text = "SQL Server";
+            this.SqlServerToolStripMenuItem.Click += new System.EventHandler(this.SqlServerToolStripMenuItem_Click);
+            // 
+            // MySQLToolStripMenuItem
+            // 
+            this.MySQLToolStripMenuItem.Image = global::Autoentity.Properties.Resources.mysql;
+            this.MySQLToolStripMenuItem.Name = "MySQLToolStripMenuItem";
+            this.MySQLToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.MySQLToolStripMenuItem.Text = "MySQL";
+            this.MySQLToolStripMenuItem.Click += new System.EventHandler(this.MySQLToolStripMenuItem_Click);
+            // 
+            // OracleToolStripMenuItem
+            // 
+            this.OracleToolStripMenuItem.Image = global::Autoentity.Properties.Resources.Oracle;
+            this.OracleToolStripMenuItem.Name = "OracleToolStripMenuItem";
+            this.OracleToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.OracleToolStripMenuItem.Text = "Oracle";
+            // 
+            // SQLiteToolStripMenuItem
+            // 
+            this.SQLiteToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_sqlite_32px_1097091_easyicon_net;
+            this.SQLiteToolStripMenuItem.Name = "SQLiteToolStripMenuItem";
+            this.SQLiteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.SQLiteToolStripMenuItem.Text = "SQLite";
+            // 
+            // PostgreSQLToolStripMenuItem
+            // 
+            this.PostgreSQLToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_postgresql_32px_1097088_easyicon_net;
+            this.PostgreSQLToolStripMenuItem.Name = "PostgreSQLToolStripMenuItem";
+            this.PostgreSQLToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.PostgreSQLToolStripMenuItem.Text = "PostgreSQL";
             // 
             // 关于ToolStripMenuItem
             // 
@@ -155,6 +194,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.radioButton2);
+            this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Controls.Add(this.SetCus_TextBox);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.GetCus_TextBox);
@@ -177,7 +218,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(197, 28);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(848, 205);
+            this.groupBox1.Size = new System.Drawing.Size(848, 317);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "设置";
@@ -369,42 +410,27 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "导入命名空间: ";
             // 
-            // SqlServerToolStripMenuItem
+            // radioButton1
             // 
-            this.SqlServerToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_sqlserver_32px_1097092_easyicon_net;
-            this.SqlServerToolStripMenuItem.Name = "SqlServerToolStripMenuItem";
-            this.SqlServerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.SqlServerToolStripMenuItem.Text = "SQL Server";
-            this.SqlServerToolStripMenuItem.Click += new System.EventHandler(this.SqlServerToolStripMenuItem_Click);
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(8, 231);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(71, 16);
+            this.radioButton1.TabIndex = 23;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "简易模式";
+            this.radioButton1.UseVisualStyleBackColor = true;
             // 
-            // MySQLToolStripMenuItem
+            // radioButton2
             // 
-            this.MySQLToolStripMenuItem.Image = global::Autoentity.Properties.Resources.mysql;
-            this.MySQLToolStripMenuItem.Name = "MySQLToolStripMenuItem";
-            this.MySQLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.MySQLToolStripMenuItem.Text = "MySQL";
-            this.MySQLToolStripMenuItem.Click += new System.EventHandler(this.MySQLToolStripMenuItem_Click);
-            // 
-            // OracleToolStripMenuItem
-            // 
-            this.OracleToolStripMenuItem.Image = global::Autoentity.Properties.Resources.Oracle;
-            this.OracleToolStripMenuItem.Name = "OracleToolStripMenuItem";
-            this.OracleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.OracleToolStripMenuItem.Text = "Oracle";
-            // 
-            // SQLiteToolStripMenuItem
-            // 
-            this.SQLiteToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_sqlite_32px_1097091_easyicon_net;
-            this.SQLiteToolStripMenuItem.Name = "SQLiteToolStripMenuItem";
-            this.SQLiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.SQLiteToolStripMenuItem.Text = "SQLite";
-            // 
-            // PostgreSQLToolStripMenuItem
-            // 
-            this.PostgreSQLToolStripMenuItem.Image = global::Autoentity.Properties.Resources.dbs_postgresql_32px_1097088_easyicon_net;
-            this.PostgreSQLToolStripMenuItem.Name = "PostgreSQLToolStripMenuItem";
-            this.PostgreSQLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.PostgreSQLToolStripMenuItem.Text = "PostgreSQL";
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(101, 231);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(71, 16);
+            this.radioButton2.TabIndex = 24;
+            this.radioButton2.Text = "模板模式";
+            this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -473,6 +499,8 @@
         private System.Windows.Forms.ToolStripMenuItem 删除此连接ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 预览生成ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 加载表ToolStripMenuItem;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }
 
