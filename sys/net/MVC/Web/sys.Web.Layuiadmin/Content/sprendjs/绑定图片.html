@@ -1,0 +1,137 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="spreadjs culture" content="zh-cn" />
+
+
+    <link href="https://demo.grapecity.com.cn/SpreadJS/cdn/v10/Spread.Sheets.Evaluation.10.3.3/css/gc.spread.sheets.excel2013white.10.3.3.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://demo.gcpowertools.com.cn/SpreadJS/cdn/v11/Spread.Sheets.Release.11.0.0/scripts/interop/jquery-1.8.2.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="https://demo.grapecity.com.cn/SpreadJS/cdn/v10/Spread.Sheets.Evaluation.10.3.3/scripts/gc.spread.sheets.all.10.3.3.min.js"></script>
+</head>
+<body>
+<div class="sample-turtorial">
+    <div id="ss" style="width:100%;height:500px;border: 2px solid gray;"></div>
+	<input type="button" id="saveExcel" value="export" class="button">
+</div>
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+	
+    $(document).ready(function () {
+        //var picture = 'data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAlCAIAAABK/LdUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAKWSURBVFhH7ZX7T5JRGMf9v1przZZdt66T1DDnWlNnkYvyMkHUZvNCmoWJiOQQoeUFzVJwEVoaLi+zqExns5qXFBTLJATXkzyzt+flvGOzH/zh/ez7C+f5fs/Le97znBMjIiKy6/nlDwy9cNdXdZRkG65frE6XlF5LrSqW62vLW/vso77lH+jbOcGNYJvpefIx1Yk9cpYksXmNmi7fCvOpP9f8MA/+EGBs6OOlMyVkdpYS4xS2Dhcmt1hdWXN0D6tVpqRDiqoiM46ycPaMkBmj0UND77c5b3/vWGVhc0Jc/vZ4fGwuzhuR8deT21auTu/LVlyuLVc2Fcn1SYeVpCosV99bnJ2P5EAecYNMuh7Pog8dW18FFvDs/hxiY6ks34hJgrneRqygNyNTWP6XhVnv+SPRvihmCAkH/657WNZmJ9YiAX+F+PnKz7xv0dsxwGXCPUOsF44XYo1NbrqGpECn9t7ISbvX3T44P+tBHx+njW5L2NBYY/O0dYCklDLt4sIylgWAc4Qka8pasMYG+oykjNpurLH4NDkL3SOTqkkyL6MGHWweaLpIqqG6E2uEqQ9fWoyOK9IKEuBq2bOKbgb8LQYdjDUu0LzEF1HCr1h3u5344SjAGqHgah2xslShbFr7vo4xDvCdiBNkNfdhmTDqmiBWAUFfP2p8Bof4zPS8e2z6ScvLzMRy4gHJktU4O59gMAS3CQmkniy+c9OSlVJJxqMRnMsCF9MfVFm6sFV6tEBf3Tk8+D4UCsH4Zmgz+tUOK+Nc6dzXpfC0TCbffdaq22CV/OsBHOLQanTwFyCiDHcfBwIbGNsJ3iWfpcHO78uw0uJv6Sqt0FTo/o/AVeDqd8MdBDvFZn014BiHjYM1ERGR3U1MzG/dmjY5fcSQGwAAAABJRU5ErkJggg==';
+        var base64url;
+        var spread;
+        var sheet;
+        var picture;
+        
+        getBase64(img, function (base64url) {
+            
+            base64url = base64url;
+            var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"), { sheetCount: 3 });
+            var sheet = spread.getActiveSheet();
+            var picture = sheet.pictures.add("f2", base64url, 20, 20, 37, 37);
+            picture.startRow(0);
+            picture.startColumn(0);
+            picture.startRowOffset(0);
+            picture.startColumnOffset(0);
+            picture.endRow(1);
+            picture.endColumn(1);
+            picture.endRowOffset(0);
+            picture.endColumnOffset(0);
+            picture.allowMove(false);
+        });
+       
+		//picture.fixedPosition(true);
+        //cellImage = "a1.png";
+        //sheet.getCell(3, 3).backgroundImage(cellImage);
+        //sheet.getRange(5, 3, 5, 5, GC.Spread.Sheets.SheetArea.viewport).backgroundImage(cellImage);
+        
+		$("#saveExcel").click(function () {
+
+			fileName = 'picture.xlsx';
+
+			var json = spread.toJSON();
+
+			// here is excel IO API
+			excelIo.save(json, function (blob) {
+				saveAs(blob, fileName);
+			}, function (e) {
+				// process error
+				console.log(e);
+			});
+
+		});
+		
+	});
+     
+    
+    
+				   
+</script>
+<script>
+
+    var img = "http://p1.pstatp.com/large/435d000085555bd8de10";
+    $(function () {
+
+        //getBase64(img);
+    })
+    //function aaaa() {
+    //这是网上的一张图片链接
+    //getBase64(url)
+    //    .then(function (base64) {
+    //        console.log(base64);//处理成功打印在控制台
+    //    }, function (err) {
+    //        console.log(err);//打印异常信息
+    //    });                        
+    //}
+
+    //传入图片路径，返回base64
+    function getBase64(img,callback) {
+        function getBase64Image(img, width, height) {//width、height调用时传入具体像素值，控制大小 ,不传则默认图像大小
+            var canvas = document.createElement("canvas");
+            canvas.width = width ? width : img.width;
+            canvas.height = height ? height : img.height; 
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            var dataURL = canvas.toDataURL();
+            return dataURL;
+        }
+        var image = new Image();
+        image.crossOrigin = '';
+        image.src = img;
+        var deferred = $.Deferred();
+        if (img) {
+            
+            image.onload = function () {
+                if (callback) {
+                    callback(getBase64Image(image));
+                }
+                deferred.resolve(getBase64Image(image));//将base64传给done上传处理
+            }
+            //return deferred.promise();//问题要让onload完成后再return sessionStorage['imgTest']
+        }
+    } 
+    function convertImgToBase64(url, callback, outputFormat) {
+        var canvas = document.createElement('CANVAS'),
+            ctx = canvas.getContext('2d'),
+            img = new Image;
+        img.crossOrigin = 'Anonymous';
+        img.onload = function () {
+            canvas.height = img.height;
+            canvas.width = img.width;
+            ctx.drawImage(img, 0, 0);
+            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+            callback.call(this, dataURL);
+            canvas = null;
+        };
+        img.src = url;
+    } 
+</script>

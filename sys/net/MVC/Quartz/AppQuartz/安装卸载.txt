@@ -1,0 +1,9 @@
+﻿cd C:\Windows\Microsoft.NET\Framework\v4.0.30319
+InstallUtil.exe C:\Users\Administrator\Desktop\新版项目\sys\net\MVC\Quartz\AppQuartz\bin\Debug\sys.Quartz.exe
+InstallUtil.exe /u C:\Users\Administrator\Desktop\新版项目\sys\net\MVC\Quartz\AppQuartz\bin\Debug\sys.Quartz.exe
+
+
+-------注册服务步骤----
+1.添加服务
+2.在设计界面【点击右键】-【添加安装程序】（此时会生成ProjectInstaller文件，包含serviceInstaller1和serviceProcessInstaller1 两个控件）
+  -修改【serviceInstaller1的ServiceName(服务名称)和Descript(描述)】-修改【serviceProcessInstaller1的Account为LocalSystem】

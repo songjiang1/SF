@@ -1,0 +1,511 @@
+﻿<!doctype html>
+<html style="height:100%;font-size:14px;">
+<head>
+    <meta name="spreadjs culture" content="zh-cn" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script>
+    <script src="FileSaver.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/plugins/gc.spread.sheets.print.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/plugins/gc.spread.sheets.pdf.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/resources/zh/gc.spread.sheets.resources.zh.12.1.0.min.js" type="text/javascript"></script>
+    <script src="customPrint.js" type="text/javascript"></script>
+    <script src="sample.js" type="text/javascript"></script>
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+
+        .sample-tutorial {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sample-spreadsheets {
+            width: calc(100% - 400px);
+            height: 100%;
+            overflow: hidden;
+            float: left;
+        }
+
+        .options-container {
+            float: right;
+            width: 400px;
+            padding: 12px;
+            height: 100%;
+            box-sizing: border-box;
+            background: #fbfbfb;
+            overflow: auto;
+            font-size: 12px;
+        }
+
+        .option-row {
+            font-size: 14px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        .container {
+            width: 100%;
+            height: calc(100% - 40px);
+            box-sizing: border-box;
+        }
+
+        .group {
+            padding-bottom: 8px;
+        }
+
+        label {
+            display: inline-block;
+            min-width: 130px;
+        }
+
+        input,
+        select {
+            margin-top: 6px;
+            padding: 4px 6px;
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+        }
+
+            input[type=checkbox] {
+                width: auto;
+                display: inline-block;
+            }
+
+        hr {
+            border: 1px solid white;
+            border-bottom-color: lightgray;
+        }
+
+        .gc-scroll-container .gc-scroll-corner-all .ui-widget .ui-corner-all {
+            left: -100px;
+        }
+    </style>
+</head>
+<body style="margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+    <div class="sample-tutorial">
+        <div id="ss" class="sample-spreadsheets"></div>
+        <div class="options-container">
+            <div class="container">
+                <div class="row">
+                    <div class="group">
+                        <label>
+                            SpreadJS只是一个Sheet，不提供分页功能。
+                            <a target="_blank" href="https://demo.grapecity.com.cn/wijmo5/Angular/Explorer/Explorer/#/grid/intro" title="Wijmo 5 分页 ，参考地址：">Wijmo 5 控件分页。</a>
+
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <span>自定义打印设置</span>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>pageCount:每页显示条数</label>
+                        <input type="number" id="pageCount" name="pageCount" value="30">
+                    </div>
+                </div>
+                <div class="row" style="display:none;">
+                    <div class="group">
+                        <label></label>
+                        <input type="button" id="lightbtnPrint" value="lightbtnPrint">
+                    </div>
+                </div>
+                <div class="row" title="打印一个区域">
+                    <div class="group">
+                        <label>RowStart:设定打印区域的开始行索引</label>
+                        <input id="rowStart">
+                    </div>
+                    <div class="group">
+                        <label>RowEnd:设定打印区域的结束行索引</label>
+                        <input id="rowEnd">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>ColumnStart:设定打印区域的开始列索引</label>
+                        <input id="columnStart">
+                    </div>
+                    <div class="group">
+                        <label>ColumnEnd:设定打印区域的结束列索引</label>
+                        <input id="columnEnd">
+                    </div>
+                </div>
+                <div class="row" title="打印重复次数">
+                    <div class="group">
+                        <label>RepeatRowStart:设定在每页左边打印重复区域的开始列索引</label>
+                        <input id="repeatRowStart">
+                    </div>
+                    <div class="group">
+                        <label>RepeatRowEnd:设定每页左边打印重复区域的结束列索引</label>
+                        <input id="repeatRowEnd">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>RepeatColumnStart:设定每页上边打印重复区域的开始行索引</label>
+                        <input id="repeatColumnStart">
+                    </div>
+                    <div class="group">
+                        <label>RepeatColumnEnd:设定每页上边打印重复区域的结束行索引</label>
+                        <input id="repeatColumnEnd">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>
+                            <input type="checkbox" id="showBorder">
+                            ShowBorder:是否打印控件的外边框线
+                        </label>
+                    </div>
+                    <div class="group">
+                        <label>
+                            <input type="checkbox" id="showGridLine">
+                            ShowGridLine: 是否打印网格线 (默认是打印)
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>ShowRowHeader:是否打印行头</label>
+                        <select id="showRowHeader">
+                            <option value="0">Inherit:行头/列头可见</option>
+                            <option value="1">Hide: 不打印</option>
+                            <option value="2">Show:在每页中都显示</option>
+                            <option value="3">ShowOnce: 显示一次 (在第一页)</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label>ShowColumnHeader:是否打印列头</label>
+                        <select id="showColumnHeader">
+                            <option value="0">Inherit:行头/列头可见</option>
+                            <option value="1">Hide: 不打印</option>
+                            <option value="2">Show:在每页中都显示</option>
+                            <option value="3">ShowOnce: 显示一次 (在第一页)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>HeaderLeft:表头区域左部分的文本及样式</label>
+                        <input id="headerLeft" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>HeaderLeftImage:表头区域左部分的图片</label>
+                        <select id="headerLeftImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>HeaderCenter:表头区域中间部分的文本及样式</label>
+                        <input id="headerCenter" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>HeaderCenterImage:表头区域中间部分的图片</label>
+                        <select id="headerCenterImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>HeaderRight:表头区域右部分的文本及样式</label>
+                        <input type="text" id="headerRight" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>HeaderRightImage:表头区域右部分的图片</label>
+                        <select id="headerRightImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>FooterLeft:表脚区域左部分的文本及样式</label>
+                        <input id="footerLeft" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>FooterLeftImage:表脚区域左部分的图片</label>
+                        <select id="footerLeftImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>FooterCenter:表脚区域中间部分的文本及样式</label>
+                        <input id="footerCenter" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>FooterCenterImage:表脚区域中间部分的图片</label>
+                        <select id="footerCenterImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>FooterRight:表脚区域右部分的文本及样式</label>
+                        <input type="text" id="footerRight" title='P: 当前页数。 N: 总页数。 D: 当前日期。（今天） T: 当前时间。   G: 图片，用来显示相应区域图片（XXXImage）的占位符。    S: 删除线。 U: 下划线。 B: 粗体。 I: 斜体。  ": (双引号)，用来设置字体。 F: Spread的名字。   A: 表单名字。'>
+                    </div>
+                    <div class="group">
+                        <label>FooterRightImage:表脚区域右部分的图片</label>
+                        <select id="footerRightImage">
+                            <option value="images/apple.jpg">Apple</option>
+                            <option value="images/olympic.jpg" selected>Olympic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="group">
+                        <label></label>
+                        <input type="button" id="btnSetPrintInfo" value="Set PrintInfo">
+                    </div>
+                </div>
+                <hr style="border: 1px solid white;border-bottom-color: lightgray;" />
+                <div>
+                    <input type="button" style="margin-bottom: 6px" value="Print" id="btnPrint">
+                </div>
+                <hr style="border: 1px solid white;border-bottom-color: lightgray;" />
+                <div>
+                    <input type="button" style="margin-bottom: 6px" value="Export PDF" id="savePDF">
+                </div>
+                <hr style="border: 1px solid white;border-bottom-color: lightgray;" />
+                <div>
+                    <input type="button" style="margin-bottom: 6px" value="Export JSON" id="saveJSON">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var spread;
+        function _getElementById(id) {
+            return document.getElementById(id);
+        } 
+        window.onload = function () {
+              spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"), {
+                sheetCount: 1
+            });
+            initSpread(spread);
+            document.getElementById('lightbtnPrint').onclick = function () {
+                // used to adjust print range, should set with printInfo (refer custom print for detail) 
+                spread.print();
+            };
+            _getElementById('btnSetPrintInfo').onclick = function () {
+                function setPrintInfoNumberValueItem(printInfo, key, method) {
+                    var value = parseInt(_getElementById(key).value),
+                        method = method || key;
+
+                    if (!isNaN(value)) {
+                        printInfo[method](value);
+                    }
+                }
+
+                var sheet = spread.getActiveSheet(),
+                    printInfo = sheet.printInfo();
+
+                ["rowStart", "rowEnd", "columnStart", "columnEnd",
+                    "repeatRowStart", "repeatRowEnd", "repeatColumnStart", "repeatColumnEnd"
+                ].forEach(function (name) {
+                    setPrintInfoNumberValueItem(printInfo, name);
+                });
+
+                printInfo.showBorder(_getElementById('showBorder').checked);
+                printInfo.showGridLine(_getElementById('showGridLine').checked);
+                printInfo.showRowHeader(_getElementById('showRowHeader').value);
+                printInfo.showColumnHeader(_getElementById('showColumnHeader').value);
+                printInfo.headerLeft(_getElementById('headerLeft').value);
+                printInfo.headerLeftImage(_getElementById('headerLeftImage').value);
+                printInfo.headerCenter(_getElementById('headerCenter').value);
+                printInfo.headerCenterImage(_getElementById('headerCenterImage').value);
+                printInfo.headerRight(_getElementById('headerRight').value);
+                printInfo.headerRightImage(_getElementById('headerRightImage').value);
+                printInfo.footerLeft(_getElementById('footerLeft').value);
+                printInfo.footerLeftImage(_getElementById('footerLeftImage').value);
+                printInfo.footerCenter(_getElementById('footerCenter').value);
+                printInfo.footerCenterImage(_getElementById('footerCenterImage').value);
+                printInfo.footerRight(_getElementById('footerRight').value);
+                printInfo.footerRightImage(_getElementById('footerRightImage').value);
+            };
+
+            _getElementById('btnPrint').onclick = function () {
+                
+
+                var pageCount = parseInt(_getElementById('pageCount').value)+1;
+                var Count=spread.getActiveSheet().getRowCount();
+                //spread.getActiveSheet().setRowPageBreak(6, true);
+                //spread.getActiveSheet().setColumnPageBreak(6, true);
+                spread.getActiveSheet().setRowPageBreak(pageCount + 1, true);
+                for (var i = pageCount+1; i <= Count; i++) {
+                    if ((i % pageCount) == 0 && i!=0) {
+                        spread.getActiveSheet().setRowPageBreak(i, true);
+                    }
+                } 
+
+                spread.print(0);
+            };
+            _getElementById('saveJSON').onclick = function () {
+                exportToJSON();
+            };
+
+            
+
+            _getElementById('savePDF').onclick = function () {
+                var pageCount = parseInt(_getElementById('pageCount').value) + 1;
+                var Count = spread.getActiveSheet().getRowCount(); 
+                spread.getActiveSheet().setRowPageBreak(pageCount + 1, true);
+                for (var i = pageCount + 1; i <= Count; i++) {
+                    if ((i % pageCount) == 0 && i != 0) {
+                        spread.getActiveSheet().setRowPageBreak(i, true);
+                    }
+                } 
+                spread.savePDF(function (blob) {
+                    saveAs(blob, 'download.pdf');
+                }, console.log);
+
+                var json = spread.toJSON({ includeBindingSource: true });
+                var excelIo = new GC.Spread.Excel.IO();
+                // here is excel IO API   
+                excelIo.save(json, function (blob) {
+                    var fd = new FormData(document.forms.namedItem("myform"));
+                    fd.append("test.xlsx", blob);
+
+                    $.ajax({
+                        url: "saveExport.do",
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: fd,
+                        success: function (data) {
+                            if (data.isSuccess == 1) {
+                                alert("上传成功！");
+                            } else {
+                                alert(data.errorMessage);
+                            }
+                        },
+                        error: function (ex) {
+                            alert("上传失败：" + ex);
+                        }
+                    });
+                }, function (e) {
+                    alert(e);
+                });
+
+
+
+
+            };
+            
+        }
+
+        function adjustLayoutForPrint(sheet) {
+            sheet.setRowHeight(0, 30);
+            sheet.getRange(0, 0, 1, 5).hAlign(1).vAlign(1).font("bold 14px Arial");
+            sheet.setColumnWidth(0, 220);
+            sheet.setColumnWidth(2, 120);
+            sheet.setColumnWidth(3, 50);
+            sheet.setColumnWidth(4, 180);
+
+            sheet.getRange(1, 0, 200, 5).textIndent(1);
+            sheet.getRange(-1, 3, -1, 1).hAlign(1).textIndent(0);
+
+            sheet.addColumns(0, 1);
+            sheet.setColumnWidth(0, 30);
+            for (var r = 5; r <= 200; r += 5) {
+                sheet.getCell(r, 0)
+                    .text(r + "")
+                    .font("normal 9px Arial");
+            }
+
+            sheet.addRows(0, 1);
+            sheet.setRowHeight(0, 10);
+
+            sheet.getRange(1, 1, 202, 5).setBorder(new GC.Spread.Sheets.LineBorder("black", GC.Spread.Sheets.LineStyle.thin), {
+                all: true
+            });
+        }
+
+        function setPrintInfo(sheet) {
+            var printInfo = sheet.printInfo();
+
+            // custom printInfo for default output
+            printInfo.showBorder(false);
+            printInfo.showGridLine(false);
+            printInfo.columnEnd(5);
+            printInfo.repeatRowStart(0);
+            printInfo.repeatRowEnd(1);
+            printInfo.showColumnHeader(GC.Spread.Sheets.Print.PrintVisibilityType.hide);
+            printInfo.showRowHeader(GC.Spread.Sheets.Print.PrintVisibilityType.hide);
+            printInfo.headerCenter("Olympic Athletes");
+            printInfo.headerLeft("&G");
+            printInfo.headerLeftImage("images/olympic.jpg");
+            printInfo.footerCenter("&P/&N");
+
+            // sync with UI setting items
+            _getElementById('rowStart').value = printInfo.rowStart();
+            _getElementById('rowEnd').value = printInfo.rowEnd();
+            _getElementById('columnStart').value = printInfo.columnStart();
+            _getElementById('columnEnd').value = printInfo.columnEnd();
+            _getElementById('repeatRowStart').value = printInfo.repeatRowStart();
+            _getElementById('repeatRowEnd').value = printInfo.repeatRowEnd();
+            _getElementById('repeatColumnStart').value = printInfo.repeatColumnStart();
+            _getElementById('repeatColumnEnd').value = printInfo.repeatColumnEnd();
+            _getElementById('showBorder').checked = printInfo.showBorder();
+            _getElementById('showGridLine').checked = printInfo.showGridLine();
+            _getElementById('showRowHeader').value = printInfo.showRowHeader();
+            _getElementById('showColumnHeader').value = printInfo.showColumnHeader();
+            _getElementById('headerLeft').value = printInfo.headerLeft();
+            _getElementById('headerLeftImage').value = printInfo.headerLeftImage();
+            _getElementById('headerCenter').value = printInfo.headerCenter();
+            _getElementById('headerCenterImage').value = printInfo.headerCenterImage();
+            _getElementById('headerRight').value = printInfo.headerRight();
+            _getElementById('headerRightImage').value = printInfo.headerRightImage();
+            _getElementById('footerLeft').value = printInfo.footerLeft();
+            _getElementById('footerLeftImage').value = printInfo.footerLeftImage();
+            _getElementById('footerCenter').value = printInfo.footerCenter();
+            _getElementById('footerCenterImage').value = printInfo.footerCenterImage();
+            _getElementById('footerRight').value = printInfo.footerRight();
+            _getElementById('footerRightImage').value = printInfo.footerRightImage();
+        }
+
+        function initSpread(spread) {
+
+            var sd = data;
+            if (sd && sd.sheets) {
+                if (!spread) {
+                    return;
+                }
+                spread.suspendPaint();
+
+                spread.fromJSON(sd);
+
+                var sheet = spread.sheets[0];
+                sheet.suspendPaint();
+                adjustLayoutForPrint(sheet);
+                sheet.resumePaint();
+                setPrintInfo(sheet);
+
+                spread.resumePaint();
+            }
+
+        }
+       
+    </script>
+</body>
+</html>

@@ -1,0 +1,695 @@
+﻿<!doctype html>
+<html style="height:100%;font-size:14px;">
+<head>
+    <meta name="spreadjs culture" content="zh-cn" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="jquery-ui.css">
+    <script src="jquery-1.8.2.min.js"></script>
+    <script src="jquery-ui.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="http://cdn.grapecity.com/spreadjs/hosted/css/gc.spread.sheets.excel2013white.12.1.0.css">
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.grapecity.com/spreadjs/hosted/scripts/resources/zh/gc.spread.sheets.resources.zh.12.1.0.min.js" type="text/javascript"></script>
+
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+
+        .sample-tutorial {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body style="background-color:rgb(158,211,164);margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+    <div id="FloatingDiv" style="width:200px;height:200px;display:none;"> 
+    </div>
+    <div class="sample-tutorial">
+        <a href="https://demo.grapecity.com.cn/spreadjs/excel-online/content/index.html" target="_blank">在线编辑器</a>
+        <div id="ss" style="width:100%;height:100%"></div>
+    </div>
+    <script type="text/javascript">
+        var spread1; 
+        window.onload = function () {
+            var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"), {
+                sheetCount: 2,
+            });
+            spread1 = spread;
+            spread.options.allowSheetReorder = false;//禁止拖动sheet，sheet1，sheet2，，，
+            var spreadNS = GC.Spread.Sheets;
+            spread.options.backColor = 'white';
+            spread.options.grayAreaBackColor = 'gray';
+            spread.options.backgroundImageLayout = spreadNS.ImageLayout.stretch;
+            spread.options.backgroundImage = 'backImg.jpg';
+            initSpread(spread);
+        };
+
+        function initSpread(spread) {
+            spread.suspendPaint();
+            spread.options.setTabStripRatio = 0.7;
+            spread.options.newTabVisible = false;
+            var sheet = spread.getSheet(0);
+            setComboBox(sheet);
+            sheet.name("土击实验记录");
+
+            var sheet2 = spread.getSheet(1);
+            sheet2.name("盒号质量HIDE");
+            sheet2.autoGenerateColumns = false;
+
+            //sheet2.bindColumns(colInfos);
+            //sheet.options.protectionOptions = {
+            //    rowHeaderVisible: false,
+            //    colHeaderVisible: false,
+            //};
+            //初始化日期控件
+            initDatepicker(sheet);
+            sheet.setRowCount(6000);
+            sheet.setColumnCount(60);
+            sheet.defaults.colWidth = 45;
+            for (var i = 0; i < 60; i++) {
+                for (var j = 0; j < 60; j++) { 
+                    sheet.getCell(i, j).shrinkToFit(true).vAlign(GC.Spread.Sheets.VerticalAlign.center).hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+                }
+            }
+
+            setBorder(sheet);
+
+            initaddSpan(sheet);
+
+            initsheet2(sheet2)//初始化sheet2
+            floatingObject(sheet);//绘制图像
+            spread.resumePaint();
+        };
+        function setComboBox(sheet) {
+            var spreadNS = GC.Spread.Sheets;
+            var arr = [];
+            for (var i = 1; i < 1000; i++) {
+                var page = new Object();
+                page.text = i;
+                page.value = i;
+                arr.push(page);
+            }
+            var combo = new spreadNS.CellTypes.ComboBox();
+            combo.items(arr).editorValueType(spreadNS.CellTypes.EditorValueType.text);
+            sheet.getCell(19, 4, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 5, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 6, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 7, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 8, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 9, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 10, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 11, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 12, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 13, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 14, spreadNS.SheetArea.viewport).cellType(combo).value("");
+            sheet.getCell(19, 15, spreadNS.SheetArea.viewport).cellType(combo).value("");
+        }
+        function initDatepicker(sheet) {
+            var spreadNS = GC.Spread.Sheets;
+
+            function DatePickerCellType() {
+            }
+           
+            DatePickerCellType.prototype = new spreadNS.CellTypes.Base(); 
+
+            DatePickerCellType.prototype.createEditorElement = function (context) {
+                //Create input presenter.
+                return document.createElement("input");
+            };
+            DatePickerCellType.prototype.activateEditor = function (editorContext, cellStyle, cellRect, context) {
+                //Initialize input editor.
+                if (editorContext) {
+                    $editor = $(editorContext);
+                    spreadNS.CellTypes.Base.prototype.activateEditor.apply(this, arguments);
+                     $editor.datepicker({dateFormat:"yy-mm-dd"}); 
+                    $editor.css("position", "absolute");
+                    $editor.attr("gcUIElement", "gcEditingInput");
+                    $(".ui-datepicker").attr("gcUIElement", "gcEditingInput");
+                }
+            }
+            DatePickerCellType.prototype.deactivateEditor = function (editorContext, context) {
+                //Remove input editor when end editor status.
+                if (editorContext) {
+                    var element = editorContext;
+                    $(element).datepicker("hide");
+                    $(element).datepicker("destroy");
+                }
+                spreadNS.CellTypes.Base.prototype.deactivateEditor.apply(this, arguments)
+            };
+            DatePickerCellType.prototype.setEditorValue = function (editor, value, context) {
+                //Sync value from Cell value to editor value.
+                //$(editor).datepicker("setDate", value);
+                var parsedDate = value;
+                if (typeof (value) != "object") {
+                     var parsedDate = $.datepicker.parseDate('yy-mm-dd', value);
+                }
+                
+                $(editor).datepicker("setDate", parsedDate);
+            };
+            DatePickerCellType.prototype.getEditorValue = function (editor, context) {
+                //Sync value from editor value to cell value. 
+                var dateAsObject=$(editor).datepicker("getDate"); 
+                return $.datepicker.formatDate('yy-mm-dd', new Date(dateAsObject));
+            };
+            DatePickerCellType.prototype.updateEditor = function (editorContext, cellStyle, cellRect, context) {
+                if (editorContext) {
+                    $editor = $(editorContext);
+                    $editor.css("width", cellRect.width - 1);
+                    $editor.css("height", cellRect.height - 3);
+                }
+            };
+            //sheet.getColumn(11).cellType(new DatePickerCellType()).width(100).formatter("yyyy年MM月dd日");
+            sheet.getCell(7, 11).cellType(new DatePickerCellType()).width(100).formatter("yyyy-MM-dd");
+            sheet.isPaintSuspended(false);
+
+        }
+        
+
+        function initaddSpan(sheet) {
+            var spreadNS = GC.Spread.Sheets;
+            sheet.options.grayAreaBackColor = 'white';
+            //sheet.options.isProtected = true;//s
+            sheet.options.gridline = {
+                showVerticalGridline: false,
+                showHorizontalGridline: false,
+                color: 'black',
+            };
+            var defaultStyle = sheet.getDefaultStyle() || new GC.Spread.Sheets.Style()
+            //可设置的属性是（按顺序）： "font-style font-variant font-weight font-size/line-height font-family"
+            defaultStyle.font = 'normal 15px Microsoft YaHei';
+            sheet.setDefaultStyle(defaultStyle);
+            sheet.getCell(8, 1).text('主要仪器设备及编号').font('normal 12px Microsoft YaHei');
+
+              
+
+            sheet.setColumnWidth(0, 200);
+            sheet.setColumnWidth(2, 80);
+            xiuyue465Function(sheet);
+            //sheet.getRange(3, 4, 4, 6)
+            //    .hAlign(GC.Spread.Sheets.HorizontalAlign.center)
+            //    .vAlign(GC.Spread.Sheets.VerticalAlign.center)
+            //    .backColor('rgb(124, 186, 235)')
+            sheet.getRange(6, 3, 2, 2).backColor('rgb(204, 232, 207)');
+            sheet.getRange(10, 3, 2, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(10, 6, 1, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(10, 9, 1, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(10, 13, 1, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(11, 8, 1, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(11, 13, 1, 1).backColor('rgb(204, 232, 207)');
+            sheet.getRange(13, 3, 3, 13).backColor('rgb(204, 232, 207)');
+            sheet.getRange(19, 3, 1, 13).backColor('rgb(204, 232, 207)');
+            sheet.getRange(21, 3, 2, 13).backColor('rgb(204, 232, 207)');
+            sheet.getRange(21, 3, 2, 13).backColor('rgb(204, 232, 207)');
+            sheet.getRange(29, 2, 13, 13).backColor('rgb(204, 232, 207)');
+            //sheet.options.backColor = 'rgb(158,211,164)';
+            //sheet.options.backColor = 'red';
+            sheet.options.rowHeaderVisible = false;
+            sheet.options.colHeaderVisible = false;
+            var style5 = new spreadNS.Style();
+            style5.isVerticalText = 'true';
+            style5.textIndent = 5;
+            sheet.addSpan(0, 1, 1, 14); sheet.addSpan(0, 16, 1, 15);
+            sheet.setValue(0, 15, "JJ0103");
+            sheet.addSpan(1, 1, 1, 15);
+            sheet.setRowHeight(1, 50);
+            sheet.getCell(1, 1).text('土的击实试验检测记录表').font('bold normal 24px normal');
+            sheet.addSpan(2, 1, 2, 2); sheet.addSpan(2, 3, 2, 6); sheet.addSpan(2, 9, 2, 2); sheet.addSpan(2, 11, 2, 5);
+            sheet.setValue(2, 1, "试验室名称"); sheet.setValue(2, 9, "记录编号");
+            sheet.addSpan(4, 1, 1, 2); sheet.addSpan(4, 3, 1, 6); sheet.addSpan(4, 9, 1, 2); sheet.addSpan(4, 11, 1, 5);
+            sheet.addSpan(5, 1, 1, 2); sheet.addSpan(5, 3, 1, 6); sheet.addSpan(5, 9, 1, 2); sheet.addSpan(5, 11, 1, 5);
+            sheet.addSpan(6, 1, 1, 2); sheet.addSpan(6, 3, 1, 6); sheet.addSpan(6, 9, 1, 2); sheet.addSpan(6, 11, 1, 5);
+            sheet.addSpan(7, 1, 1, 2); sheet.addSpan(7, 3, 1, 6); sheet.addSpan(7, 9, 1, 2); sheet.addSpan(7, 11, 1, 5);
+            sheet.setValue(4, 1, "工程部位/用途"); sheet.setValue(4, 9, "委托/任务编号");
+            sheet.setValue(5, 1, "试验依据"); sheet.setValue(5, 9, "样品编号");
+            sheet.setValue(6, 1, "样品描述"); sheet.setValue(6, 9, "样品名称");
+            sheet.setValue(7, 1, "试验条件"); sheet.setValue(7, 9, "试验日期");
+
+            sheet.addSpan(8, 1, 2, 2); sheet.addSpan(8, 3, 2, 13);
+            sheet.addSpan(10, 1, 1, 2); sheet.addSpan(10, 4, 1, 2); sheet.addSpan(10, 7, 1, 2); sheet.addSpan(10, 10, 1, 3); sheet.addSpan(10, 13, 1, 3);
+            sheet.addSpan(11, 1, 1, 2); sheet.addSpan(11, 4, 1, 4); sheet.addSpan(11, 9, 1, 4); sheet.addSpan(11, 13, 1, 3);
+            
+            sheet.setValue(10, 1, "击锤质量(kg)"); sheet.setValue(10, 4, "每层击数"); sheet.setValue(10, 7, "落距(cm)"); sheet.setValue(10, 10, "大于40mm颗粒含量(%)");
+            sheet.setValue(11, 1, "试样比重"); sheet.setValue(11, 4, "大于40mm颗粒毛体积比重"); sheet.setValue(11, 9, "大于40mm颗粒吸水率(%)");
+
+            sheet.addSpan(12, 1, 1, 3); sheet.addSpan(12, 4, 1, 2); sheet.addSpan(12, 6, 1, 2); sheet.addSpan(12, 8, 1, 2); sheet.addSpan(12, 10, 1, 2); sheet.addSpan(12, 12, 1, 2); sheet.addSpan(12, 14, 1, 2);
+            sheet.addSpan(13, 1, 6, 1); sheet.addSpan(13, 2, 1, 2); sheet.addSpan(13, 4, 1, 2); sheet.addSpan(13, 6, 1, 2); sheet.addSpan(13, 8, 1, 2); sheet.addSpan(13, 10, 1, 2); sheet.addSpan(13, 12, 1, 2); sheet.addSpan(13, 14, 1, 2);
+            sheet.addSpan(14, 2, 1, 2); sheet.addSpan(14, 4, 1, 2); sheet.addSpan(14, 6, 1, 2); sheet.addSpan(14, 8, 1, 2); sheet.addSpan(14, 10, 1, 2); sheet.addSpan(14, 12, 1, 2); sheet.addSpan(14, 14, 1, 2);
+            sheet.addSpan(15, 2, 1, 2); sheet.addSpan(15, 4, 1, 2); sheet.addSpan(15, 6, 1, 2); sheet.addSpan(15, 8, 1, 2); sheet.addSpan(15, 10, 1, 2); sheet.addSpan(15, 12, 1, 2); sheet.addSpan(15, 14, 1, 2);
+            sheet.addSpan(16, 2, 1, 2); sheet.addSpan(16, 4, 1, 2); sheet.addSpan(16, 6, 1, 2); sheet.addSpan(16, 8, 1, 2); sheet.addSpan(16, 10, 1, 2); sheet.addSpan(16, 12, 1, 2); sheet.addSpan(16, 14, 1, 2);
+            sheet.addSpan(17, 2, 1, 2); sheet.addSpan(17, 4, 1, 2); sheet.addSpan(17, 6, 1, 2); sheet.addSpan(17, 8, 1, 2); sheet.addSpan(17, 10, 1, 2); sheet.addSpan(17, 12, 1, 2); sheet.addSpan(17, 14, 1, 2);
+            sheet.addSpan(18, 2, 1, 2); sheet.addSpan(18, 4, 1, 2); sheet.addSpan(18, 6, 1, 2); sheet.addSpan(18, 8, 1, 2); sheet.addSpan(18, 10, 1, 2); sheet.addSpan(18, 12, 1, 2); sheet.addSpan(18, 14, 1, 2);
+            sheet.setValue(12, 1, "试验次数"); sheet.setValue(12, 4, 1); sheet.setValue(12, 6, 2); sheet.setValue(12, 8, 3); sheet.setValue(12, 10, 4); sheet.setValue(12, 12, 5); sheet.setValue(12, 14, 6);
+            sheet.setText(13, 1, '干密度', spreadNS.SheetArea.viewport); sheet.setStyle(13, 1, style5, spreadNS.SheetArea.viewport); sheet.setValue(13, 2, '筒容积(cm3)');
+            sheet.setValue(14, 2, '筒质量(g)');
+            sheet.setValue(15, 2, '筒+湿土质量(g)');
+            sheet.setValue(16, 2, '湿土质量(g)');
+            sheet.setValue(17, 2, '湿密度(g/cm3)');
+            sheet.setValue(18, 2, '干密度(g/cm3)');
+
+
+            sheet.addSpan(19, 1, 8, 1); sheet.addSpan(19, 2, 1, 2);
+            sheet.addSpan(20, 2, 1, 2);
+            sheet.addSpan(21, 2, 1, 2);
+            sheet.addSpan(22, 2, 1, 2);
+            sheet.addSpan(23, 2, 1, 2);
+            sheet.addSpan(24, 2, 1, 2);
+            sheet.addSpan(25, 2, 1, 2);
+            sheet.addSpan(26, 2, 1, 2); sheet.addSpan(26, 4, 1, 2); sheet.addSpan(26, 6, 1, 2); sheet.addSpan(26, 8, 1, 2); sheet.addSpan(26, 10, 1, 2); sheet.addSpan(26, 12, 1, 2); sheet.addSpan(26, 14, 1, 2);
+            sheet.setText(19, 1, '含水率', spreadNS.SheetArea.viewport); sheet.setStyle(19, 1, style5, spreadNS.SheetArea.viewport); sheet.setValue(19, 2, '盒号');
+            sheet.setValue(20, 2, '盒质量  (g)');
+            sheet.setFormula(20, 4, "=VLOOKUP(E20, 盒号质量HIDE!A2: B43, 2, FALSE)"); sheet.setFormula(20, 5, "=VLOOKUP(F20, 盒号质量HIDE!A2: B43, 2, FALSE)");
+            sheet.setFormula(20, 6, "=VLOOKUP(G20, 盒号质量HIDE!A2: B43, 2, FALSE)"); sheet.setFormula(20, 7, "=VLOOKUP(H20, 盒号质量HIDE!A2: B43, 2, FALSE)"); sheet.setFormula(20, 8, "=VLOOKUP(I20, 盒号质量HIDE!A2: B43, 2, FALSE)");
+            sheet.setFormula(20, 9, "=VLOOKUP(J20, 盒号质量HIDE!A2: B43, 2, FALSE)"); sheet.setFormula(20, 10, "=VLOOKUP(K20, 盒号质量HIDE!A2: B43, 2, FALSE)");; sheet.setFormula(20, 11, "=VLOOKUP(L20, 盒号质量HIDE!A2: B43, 2, FALSE)");
+            sheet.setFormula(20, 12, "=VLOOKUP(M20, 盒号质量HIDE!A2: B43, 2, FALSE)"); sheet.setFormula(20, 13, "=VLOOKUP(N20, 盒号质量HIDE!A2: B43, 2, FALSE)");; sheet.setFormula(20, 14, "=VLOOKUP(O20, 盒号质量HIDE!A2: B43, 2, FALSE)");
+            sheet.setFormula(20, 15, "=VLOOKUP(P20, 盒号质量HIDE!A2: B43, 2, FALSE)");
+            sheet.setValue(21, 2, '盒+湿土质量  (g)');
+            sheet.setValue(22, 2, '盒+干土质量  (g)');
+            sheet.setValue(23, 2, '水质量  (g)');
+            sheet.setValue(24, 2, '干土质量  (g)');
+            sheet.setValue(25, 2, '含水率   (%)');
+            sheet.setValue(26, 2, '平均含水率  (%)');
+
+            sheet.addSpan(27, 1, 15, 1); sheet.addSpan(27, 2, 1, 3); sheet.addSpan(27, 5, 1, 2); sheet.addSpan(27, 8, 1, 4); sheet.addSpan(27, 12, 1, 3);
+            sheet.addSpan(28, 2, 1, 3); sheet.addSpan(28, 5, 1, 2); sheet.addSpan(28, 8, 1, 4); sheet.addSpan(28, 12, 1, 3)
+            sheet.addSpan(29, 2, 13, 14);
+            sheet.setText(27, 1, '击实曲线', spreadNS.SheetArea.viewport); sheet.setStyle(27, 1, style5, spreadNS.SheetArea.viewport); sheet.setValue(27, 2, '最大干密度'); sheet.setValue(27, 7, '(g/cm3)');
+            sheet.setValue(27, 8, '最佳含水率'); sheet.setValue(27, 15, '(%)');
+            sheet.setValue(28, 2, '最大干密度(校正后)'); sheet.setValue(28, 7, '(g/cm3))'); sheet.setValue(28, 8, '最佳含水率(校正后)'); sheet.setValue(28, 15, '(%)');
+
+
+
+            sheet.addSpan(42, 1, 1, 2); sheet.addSpan(42, 3, 1, 13);
+            sheet.addSpan(43, 2, 1, 3); sheet.addSpan(43, 6, 1, 3);
+
+            sheet.setValue(42, 1, '备  注:');
+            sheet.setValue(43, 1, '试验：');
+            sheet.setValue(43, 5, '复核：');
+            sheet.setValue(43, 9, '日期：');
+            sheet.setValue(43, 11, '年');
+            sheet.setValue(43, 13, '月');
+            sheet.setValue(43, 15, '日');
+
+            //右侧
+            sheet.setColumnWidth(23, 100);
+            sheet.setColumnWidth(24, 100);
+            sheet.setColumnWidth(25, 100);
+            sheet.setValue(9, 23, '含水量'); sheet.setValue(9, 24, '干密度');
+            var fl = 1;
+            for (var i = 10; i < 16; i++) {
+
+                sheet.setValue(i, 22, fl);
+                fl++;
+            }
+
+            sheet.setFormula(10, 23, "=E27");
+            sheet.setFormula(11, 23, "=G27");
+            sheet.setFormula(12, 23, "=I27");
+            sheet.setFormula(13, 23, "=K27");
+            sheet.setFormula(14, 23, "=M27");
+            sheet.setFormula(15, 23, "=O27");
+            sheet.setFormula(16, 23, "=MIN(X11:X16)-0.5");
+            sheet.setFormula(17, 23, "=MAX(X11:X16)+0.5");
+
+            sheet.setFormula(10, 24, "=E19");
+            sheet.setFormula(11, 24, "=G19");
+            sheet.setFormula(12, 24, "=I19");
+            sheet.setFormula(13, 24, "=K19");
+            sheet.setFormula(14, 24, "=M19");
+            sheet.setFormula(15, 24, "=O19");
+            sheet.setFormula(16, 24, "=MIN(Y11:Y16)-0.5");
+            sheet.setFormula(17, 24, "=MAX(Y11:Y16)+0.5");
+
+            //设置数据格式
+            sheet.setFormatter(10, 23, '0.00;@');
+            sheet.setFormatter(11, 23, '0.00;@');
+            sheet.setFormatter(12, 23, '0.00;@');
+            sheet.setFormatter(13, 23, '0.00;@');
+            sheet.setFormatter(14, 23, '0.00;@');
+            sheet.setFormatter(15, 23, '0.00;@');
+            sheet.setFormatter(16, 23, '0.00;@');
+            sheet.setFormatter(17, 23, '0.00;@');
+
+            sheet.setFormatter(10, 24, '0.00;@');
+            sheet.setFormatter(11, 24, '0.00;@');
+            sheet.setFormatter(12, 24, '0.00;@');
+            sheet.setFormatter(13, 24, '0.00;@');
+            sheet.setFormatter(14, 24, '0.00;@');
+            sheet.setFormatter(15, 24, '0.00;@');
+            sheet.setFormatter(16, 24, '0.00;@');
+            sheet.setFormatter(17, 24, '0.00;@');
+            sheet.setValue(16, 22, "min");
+            sheet.setValue(17, 22, "max");
+            sheet.setValue(20, 23, '下限'); sheet.setValue(20, 24, '上限'); sheet.setValue(20, 25, '差值');
+            sheet.setValue(21, 23, 0); sheet.setValue(21, 24, 5); sheet.setValue(21, 25, 0.3);
+            sheet.setValue(22, 23, 5); sheet.setValue(22, 24, 40); sheet.setValue(22, 25, 1);
+            sheet.setValue(23, 23, 40); sheet.setValue(23, 24, 999); sheet.setValue(23, 25, 2);
+            //
+            sheet.setFormatter(21, 23, '0.00;@'); sheet.setFormatter(21, 24, '0.00;@'); sheet.setFormatter(21, 25, '0.00;@');
+            sheet.setFormatter(22, 23, '0.00;@'); sheet.setFormatter(22, 24, '0.00;@'); sheet.setFormatter(22, 25, '0.00;@');
+            sheet.setFormatter(23, 23, '0.00;@'); sheet.setFormatter(23, 24, '0.00;@'); sheet.setFormatter(23, 25, '0.00;@');
+
+            sheet.addSpan(27, 23, 2, 1);
+            sheet.setValue(27, 23, '最终值'); sheet.setValue(27, 24, '最大干密度'); sheet.setValue(27, 25, '最佳含水率');
+            sheet.setFormula(28, 24, '=IFERROR(IF(AND(F29<>"/",F29<>""),F29,F28),F28)');
+            sheet.setFormula(28, 25, '=IFERROR(IF(AND(M29<>"/",M29<>""),M29,M28),M28)');
+            sheet.setFormatter(28, 24, '0.00;@'); sheet.setFormatter(28, 25, '0.00;@');
+        }
+        function setBorder(sheet) {
+            var spreadNS = GC.Spread.Sheets;
+            var lineBorder1 = new spreadNS.LineBorder('black', spreadNS.LineStyle.medium);
+            var range = sheet.getRange(4, 1, 39, 15);
+            //range.setBorder(lineBorder1, { outline: true },{ all: true });
+            range.borderLeft(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range.borderRight(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range.borderBottom(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            //range.borderTop(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+
+            sheet.getRange(4, 1, 39, 15).setBorder(new GC.Spread.Sheets.LineBorder('black', GC.Spread.Sheets.LineStyle.medium), {
+                left: true, right: true, top: true, bottom: true
+            });
+            sheet.getRange(4, 0, 39, 1).setBorder(new GC.Spread.Sheets.LineBorder('black', GC.Spread.Sheets.LineStyle.medium), {
+                right: true
+            });
+
+            var range1 = sheet.getRange(10, 23, 8, 2);
+            range1.borderLeft(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range1.borderRight(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range1.borderBottom(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range1.borderTop(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+
+            var range2 = sheet.getRange(20, 23, 4, 3);
+            range2.borderLeft(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range2.borderRight(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range2.borderBottom(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range2.borderTop(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+
+            var range3 = sheet.getRange(27, 23, 2, 3);
+            range3.borderLeft(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range3.borderRight(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range3.borderBottom(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range3.borderTop(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+
+
+            sheet.getRange(27, 6, 2, 1).setBorder(new spreadNS.LineBorder('rgb(158,211,164)', spreadNS.LineStyle.dotted), { right: true });
+            sheet.getRange(27, 7, 2, 1).setBorder(new spreadNS.LineBorder('rgb(158,211,164)', spreadNS.LineStyle.dotted), { left: true });
+            sheet.getRange(27, 14, 2, 1).setBorder(new spreadNS.LineBorder('rgb(158,211,164)', spreadNS.LineStyle.dotted), { right: true });
+            sheet.getRange(27, 15, 2, 1).setBorder(new spreadNS.LineBorder('rgb(158,211,164)', spreadNS.LineStyle.dotted), { left: true });
+        }
+        //sheet2初始化
+        function initsheet2(sheet) {
+            sheet.getRange(1, 4, 5, 3).backColor('rgb(158, 211, 164)');
+            var spreadNS = GC.Spread.Sheets;
+            var lineBorder1 = new spreadNS.LineBorder('black', spreadNS.LineStyle.thin);
+            var range = sheet.getRange(1, 4, 5, 3);
+            range.borderLeft(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range.borderRight(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range.borderBottom(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+            range.borderTop(new spreadNS.LineBorder('black', spreadNS.LineStyle.thin));
+
+
+            //sheet.getRange(1, 4, 5, 3).setBorder(new GC.Spread.Sheets.LineBorder('black', GC.Spread.Sheets.LineStyle.thin), {
+            //    left: true, right: true, top: true, bottom: true
+            //});
+
+
+            var arrValue = [22.5, 22.7, 131.5, 124.22, 128.09, 120.1, 123.69, 122.33, 26.61, 37.27, 27.86, 37.41];
+            var spreadNS = GC.Spread.Sheets;
+            var dataSource = [];
+            for (var i = 0; i < 1001; i++) {
+                var arry = new Object();
+                if (i == 0) {
+                    arry.A = '盒号'; arry.B = '质量(g)'; dataSource.push(arry);
+                } else if (i == 1000) {
+                    arry.A = '/'; arry.B = '/'; dataSource.push(arry);
+                } else if (i == 2) {
+                    arry.A = i; arry.B = arrValue[1]; arry.E = 1.00; arry.F = 5.00; arry.G = 0.30; dataSource.push(arry);
+                } else if (i == 7) {
+                    arry.A = i; arry.B = arrValue[2]; dataSource.push(arry);
+                } else if (i == 10) {
+                    arry.A = i; arry.B = arrValue[3]; dataSource.push(arry);
+                } else if (i == 12) {
+                    arry.A = i; arry.B = arrValue[4]; dataSource.push(arry);
+                } else if (i == 16) {
+                    arry.A = i; arry.B = arrValue[5]; dataSource.push(arry);
+                } else if (i == 22) {
+                    arry.A = i; arry.B = arrValue[6]; dataSource.push(arry);
+                } else if (i == 26) {
+                    arry.A = i; arry.B = arrValue[7]; dataSource.push(arry);
+                } else if (i == 41) {
+                    arry.A = i; arry.B = arrValue[8]; dataSource.push(arry);
+                } else if (i == 48) {
+                    arry.A = i; arry.B = arrValue[9]; dataSource.push(arry);
+                } else if (i == 52) {
+                    arry.A = i; arry.B = arrValue[10]; dataSource.push(arry);
+                } else if (i == 64) {
+                    arry.A = i; arry.B = arrValue[11]; dataSource.push(arry);
+                } else {
+                    if (i == 1) {
+                        arry.E = "下限"; arry.F = "上限"; arry.G = "差值";
+                    }
+                    if (i == 3) {
+                        arry.E = 5.00; arry.F = 40.00; arry.G = 1.00;
+                    }
+                    if (i == 4) {
+                        arry.E = 40.00; arry.F = 999.00; arry.G = 2.00;
+                    }
+                    if (i == 5) {
+                        arry.E = 1.00; arry.F = 2.00; arry.G = 0.00;
+                    }
+                    arry.A = i; arry.B = arrValue[0]; dataSource.push(arry);
+                }
+            }
+            //console.log(dataSource)
+            sheet.setDataSource(dataSource);
+            var colInfos = [
+                { name: "A", displayName: "A" },
+                { name: "B", displayName: "B", size: 80 },
+                { name: "C", displayName: "C", size: 80 },
+                { name: "D", displayName: "D" },
+                //{ name: "E", displayName: "E", formatter: "0.00", size: 80 },
+                { name: "E", displayName: "E", formatter: "0.00", size: 80 },
+                { name: "F", displayName: "F", formatter: "0.00", size: 80 },
+                { name: "G", displayName: "G", formatter: "0.00", size: 80 },
+                { name: "H", displayName: "H", size: 80 },
+                //{ name: "H", displayName: "H", cellType: new GC.Spread.Sheets.CellTypes.CheckBox(), size: 100 },
+                { name: "I", displayName: "I" }
+            ];
+            sheet.bindColumns(colInfos);
+            sheet.autoGenerateColumns = true;
+            sheet.repaint()
+        }
+        //添加自定义函数及绑定函数
+        function addFactorial(sheet) {
+            function FactorialFunction() {
+                this.name = "FACTORIAL";
+                this.maxArgs = 1;
+                this.minArgs = 1;
+            }
+            FactorialFunction.prototype = new GC.Spread.CalcEngine.Functions.Function();
+            FactorialFunction.prototype.evaluate = function (arg) {
+                var result = 1;
+                if (arguments.length === 1 && !isNaN(parseInt(arg))) {
+                    for (var i = 1; i <= arg; i++) {
+                        result = i * result;
+                    }
+                    return result;
+                }
+                return "#VALUE!";
+            };
+            var factorial = new FactorialFunction();
+            sheet.addCustomFunction(factorial);
+        }
+        function xiuyue465Function(sheet) {
+            addFactorial(sheet);
+            function FactorialFunction() {
+                this.name = "XIUYUE465";
+                this.maxArgs = 2;
+                this.minArgs = 2;
+            }
+            FactorialFunction.prototype = new GC.Spread.CalcEngine.Functions.Function();
+            FactorialFunction.prototype.evaluate = function (value, number) {
+                
+                if (value != undefined && value != null && value != "" && value != 0 && !isNaN(parseInt(number))) {
+                    return value.toFixed(number);
+                }
+                return "#VALUE!";
+            };
+            var factorial = new FactorialFunction();
+            sheet.addCustomFunction(factorial);
+
+
+
+
+
+
+
+
+            //干密度
+            sheet.setFormula(16, 4, '=IF(AND(E16<>"",E16<>" /"),E16-E15,T(E16))');
+            sheet.setFormula(17, 4, "=IFERROR(XIUYUE465((E16-E15)/E14,2),T(E14))");
+            sheet.setFormula(18, 4, "=IFERROR(XIUYUE465(E18/(1+E27/100),2),T(E14))");
+
+            sheet.setFormula(16, 6, '=IF(AND(G16<>"",G16<>" /"),G16-G15,T(G16))');
+            sheet.setFormula(17, 6, "=IFERROR(XIUYUG465((G16-G15)/G14,2),T(G14))");
+            sheet.setFormula(18, 6, "=IFERROR(XIUYUG465(G18/(1+G27/100),2),T(G14))");
+
+            sheet.setFormula(16, 8, '=IF(AND(I16<>"",I16<>" /"),I16-I15,T(I16))');
+            sheet.setFormula(17, 8, "=IFERROR(XIUYUI465((I16-I15)/I14,2),T(I14))");
+            sheet.setFormula(18, 8, "=IFERROR(XIUYUI465(I18/(1+I27/100),2),T(I14))");
+
+            sheet.setFormula(16, 10, '=IF(AND(K16<>"",K16<>" /"),K16-K15,T(K16))');
+            sheet.setFormula(17, 10, "=IFERROR(XIUYUK465((K16-K15)/K14,2),T(K14))");
+            sheet.setFormula(18, 10, "=IFERROR(XIUYUK465(K18/(1+K27/100),2),T(K14))");
+
+            sheet.setFormula(16, 12, '=IF(AND(M16<>"",M16<>" /"),M16-M15,T(M16))');
+            sheet.setFormula(17, 12, "=IFERROR(XIUYUM465((M16-M15)/M14,2),T(M14))");
+            sheet.setFormula(18, 12, "=IFERROR(XIUYUM465(M18/(1+M27/100),2),T(M14))");
+
+            sheet.setFormula(16, 14, '=IF(AND(O16<>"",O16<>" /"),O16-O15,T(O16))');
+            sheet.setFormula(17, 14, "=IFERROR(XIUYUO465((O16-O15)/O14,2),T(O14))");
+            sheet.setFormula(18, 14, "=IFERROR(XIUYUO465(O18/(1+O27/100),2),T(O14))");
+
+            //含水率
+            sheet.setFormula(23, 4, '=IF(AND(E22<>"",E22<>" /"),E22-E23,T(E22))');
+            sheet.setFormula(24, 4, '=IF(AND(E23<>"",E23<>"/"),E23-E20,T(E23))');
+            sheet.setFormula(25, 4, '=IF(AND(E25<>"",E25<>"/"),xiuyue465(E24/E25*100,1),T(E25))');
+
+            sheet.setFormula(23, 5, '=IF(AND(F22<>"",F22<>" /"),F22-F23,T(F22))');
+            sheet.setFormula(24, 5, '=IF(AND(F23<>"",F23<>"/"),F23-F20,T(F23))');
+            sheet.setFormula(25, 5, '=IF(AND(F25<>"",F25<>"/"),xiuyuF465(F24/F25*100,1),T(F25))');
+
+            sheet.setFormula(23, 6, '=IF(AND(G22<>"",G22<>" /"),G22-G23,T(G22))');
+            sheet.setFormula(24, 6, '=IF(AND(G23<>"",G23<>"/"),G23-G20,T(G23))');
+            sheet.setFormula(25, 6, '=IF(AND(G25<>"",G25<>"/"),xiuyuG465(G24/G25*100,1),T(G25))');
+
+            sheet.setFormula(23, 7, '=IF(AND(H22<>"",H22<>" /"),H22-H23,T(H22))');
+            sheet.setFormula(24, 7, '=IF(AND(H23<>"",H23<>"/"),H23-H20,T(H23))');
+            sheet.setFormula(25, 7, '=IF(AND(H25<>"",H25<>"/"),xiuyuH465(H24/H25*100,1),T(H25))');
+
+            sheet.setFormula(23, 8, '=IF(AND(I22<>"",I22<>" /"),I22-I23,T(I22))');
+            sheet.setFormula(24, 8, '=IF(AND(I23<>"",I23<>"/"),I23-I20,T(I23))');
+            sheet.setFormula(25, 8, '=IF(AND(I25<>"",I25<>"/"),xiuyuI465(I24/I25*100,1),T(I25))');
+
+            sheet.setFormula(23, 9, '=IF(AND(J22<>"",J22<>" /"),J22-J23,T(J22))');
+            sheet.setFormula(24, 9, '=IF(AND(J23<>"",J23<>"/"),J23-J20,T(J23))');
+            sheet.setFormula(25, 9, '=IF(AND(J25<>"",J25<>"/"),xiuyuJ465(J24/J25*100,1),T(J25))');
+
+            sheet.setFormula(23, 10, '=IF(AND(K22<>"",K22<>" /"),K22-K23,T(K22))');
+            sheet.setFormula(24, 10, '=IF(AND(K23<>"",K23<>"/"),K23-K20,T(K23))');
+            sheet.setFormula(25, 10, '=IF(AND(K25<>"",K25<>"/"),xiuyuK465(K24/K25*100,1),T(K25))');
+
+            sheet.setFormula(23, 11, '=IF(AND(L22<>"",L22<>" /"),L22-L23,T(L22))');
+            sheet.setFormula(24, 11, '=IF(AND(L23<>"",L23<>"/"),L23-L20,T(L23))');
+            sheet.setFormula(25, 11, '=IF(AND(L25<>"",L25<>"/"),xiuyuL465(L24/L25*100,1),T(L25))');
+
+            sheet.setFormula(23, 12, '=IF(AND(M22<>"",M22<>" /"),M22-M23,T(M22))');
+            sheet.setFormula(24, 12, '=IF(AND(M23<>"",M23<>"/"),M23-M20,T(M23))');
+            sheet.setFormula(25, 12, '=IF(AND(M25<>"",M25<>"/"),xiuyuM465(M24/M25*100,1),T(M25))');
+
+            sheet.setFormula(23, 13, '=IF(AND(N22<>"",N22<>" /"),N22-N23,T(N22))');
+            sheet.setFormula(24, 13, '=IF(AND(N23<>"",N23<>"/"),N23-N20,T(N23))');
+            sheet.setFormula(25, 13, '=IF(AND(N25<>"",N25<>"/"),xiuyuN465(N24/N25*100,1),T(N25))');
+
+            sheet.setFormula(23, 14, '=IF(AND(O22<>"",O22<>" /"),O22-O23,T(O22))');
+            sheet.setFormula(24, 14, '=IF(AND(O23<>"",O23<>"/"),O23-O20,T(O23))');
+            sheet.setFormula(25, 14, '=IF(AND(O25<>"",O25<>"/"),xiuyuO465(O24/O25*100,1),T(O25))');
+
+            sheet.setFormula(23, 15, '=IF(AND(P22<>"",P22<>" /"),P22-P23,T(P22))');
+            sheet.setFormula(24, 15, '=IF(AND(P23<>"",P23<>"/"),P23-P20,T(P23))');
+            sheet.setFormula(25, 15, '=IF(AND(P25<>"",P25<>"/"),xiuyuP465(P24/P25*100,1),T(P25))');
+
+            //sheet.setFormula(25, 4, '=IF(AND(AA43<>"/",AA43<>"",AE43<>"/",AE43<>""),xiuyue465(MultiOverProofA(AA43:AH43,CN41:CN43,CO41:CO43,CP41:CP43),1),T(AA43))');
+            //=IFERROR(xiuyue465(AI35/(1+AI44/100),2),T(AI31))
+        }
+        //浮动元素
+        function floatingObject(sheet) {
+           
+            var spreadNS = GC.Spread.Sheets;
+            var customFloatingObject = new spreadNS.FloatingObjects.FloatingObject("f0");
+            customFloatingObject.startRow(30);
+            customFloatingObject.startColumn(3);
+            customFloatingObject.endColumn(15);
+            customFloatingObject.endRow(41);
+            
+            var div = document.createElement('div'); 
+            var drawing = document.createElement('canvas');
+            drawing.id = "drawing";
+            div.append(drawing);
+            //var canvas = createCanvas(div,drawing);
+            //div.innerHTML = "这是canvas";
+            //div.append(canvas);
+            div.style.background = 'rgb(204,232,207)'; 
+            customFloatingObject.content(div);
+            sheet.floatingObjects.add(customFloatingObject);
+            //sheet.pictures.add("f2", "images/splogo.png", 62, 140, 180, 200);
+            sheet.resumePaint();
+            createCanvas();
+        }
+
+        function createCanvas(oDiv, drawing) {
+            
+            //var drawing = document.createElement('canvas');
+            var drawing = document.getElementById('drawing');
+            var context = drawing.getContext("2d");
+            var width = 200; var height = 200; var s = 10; 
+            drawing.style.width = width;
+            drawing.style.height = height;
+            context.beginPath();
+            //绘制xy轴
+            xy(width, height, s, context);
+            //描点
+            power(width, height, context);
+            //连线
+            context.stroke();
+            //oDiv.appendChild(drawing);
+            //$("#FloatingDiv").append(drawing);
+            return drawing;
+        }
+
+
+        function xy(x, y, s, context) {
+            // 绘制X轴
+            context.moveTo(0, y / 2);
+            context.lineTo(x, y / 2);
+            context.lineTo(x - s, y / 2 - s);
+            context.moveTo(x, y / 2);
+            context.lineTo(x - s, y / 2 + s);
+            //绘制Y轴
+            context.moveTo(x / 2, y);
+            context.lineTo(x / 2, 0);
+            context.lineTo(x / 2 + s, s);
+            context.moveTo(x / 2, 0);
+            context.lineTo(x / 2 - s, s);
+            //标注XY轴
+            context.font = "bold 20px Arial";
+            context.textAlign = "center";
+            context.textBaseline = "midden";
+            context.fillText("x", x - s, y / 2 + 3 * s);
+            context.fillText("y", x / 2 + 2 * s, 2 * s);
+
+            
+            context.font = "bold 28px Arial";
+            context.fillText("y=x", x / 2 + s, y * 0.7 );
+            context.font = "bold 14px Arial";
+            context.fillText("2", x / 2 + s + 25, y *0.7 -15);
+        }
+        function power(width, higth, context) {
+            var x = -2;
+            //起始描绘点
+            var width_ = (width / 2);
+            var higth_ = (higth / 2);
+            context.moveTo(100 * x + width_, higth_ - 100 * x * x);
+            //下一个描绘点
+            for (var i = 1; i <= higth_; i++) {
+                x = x + i / 100;
+                context.lineTo(100 * x + width_, higth_ - 100 * x * x);
+
+            }
+        }
+    </script>
+</body>
+</html>

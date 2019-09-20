@@ -1,0 +1,68 @@
+﻿
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- disable IE compatible view -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="spreadjs culture" content="zh-cn" />
+    <title> 编辑器 </title>  
+    <!-- Libraries -->
+    <link href="/Content/sprendjs/designer/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/sprendjs/designer/lib/gcui.css" rel="stylesheet" />
+    <link href="/Content/sprendjs/designer/css/gc.spread.sheets.excel2013white.css" rel="stylesheet" />
+    <link href="/Content/sprendjs/designer/lib/zTreeStyle/css/zTreeStyle.css" rel="stylesheet" />
+    <link href="/Content/sprendjs/designer/css/gc.spread.sheets.designer.css" rel="stylesheet" /> 
+</head>
+
+<body unselectable="on" style="-moz-user-select: none; -webkit-user-select: none; user-select: none;">
+    <div class="container">
+        <div class="loading-placeholder background-mask-layer"></div>
+        <span class="loading-placeholder loading-pic"></span>
+        <div class="header">
+            <div data-include="ribbon">
+            </div>
+            <div data-include="formulaBar">
+            </div>
+        </div>
+        <div class="content">
+            <div class="vertical-splitter ui-draggable hidden" id="verticalSplitter"></div>
+            <div class="fill-spread-content" data-include="spreadWrapper">
+            </div>
+        </div>
+        <div class="footer">
+            <div data-include="statusBar">
+            </div>
+        </div>
+        <div class="file-menu hidden">
+            <div data-include="fileMenu"></div>
+        </div>
+        <div class="slicer-contextmenu-width hidden">
+            <span id="name-container"></span>
+        </div>
+        <div class="ui-button-text-icon-primary"
+             style="position: absolute; left: -1000px; top: -1000px; visibility: hidden">
+            <span id="measureWidth" class="ui-button-text"></span>
+        </div>
+        <div class="hidden">
+            <input type="file" id="fileSelector" name="files[]" />
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="/Content/sprendjs/designer/lib/jquery-2.0.2.min.js"></script>
+    <script src="/Content/sprendjs/designer/lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="/Content/sprendjs/designer/lib/knockout-2.3.0.min.js"></script>
+    <script src="/Content/sprendjs/designer/lib/zTreeStyle/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="/Content/sprendjs/designer/lib/FileSaver.min.js"></script>
+    <script src="sprendjs/designer/scripts/gc.spread.sheets.designer.resource.min.js"></script>
+    <script src="/Content/sprendjs/designer/scripts/gc.spread.sheets.designer.min.js"></script>
+
+
+
+
+
+</body>
+
+</html >

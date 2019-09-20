@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数绘制</title>
+</head>
+<body>
+    <canvas id="drawing" width="400" height="800" style="margin:100px auto;display: block;"></canvas>
+    <script type="text/javascript">var drawing=document.getElementById("drawing");
+		var context=drawing.getContext("2d");
+		// context.strokeRect(0,0,400,400);
+
+		context.beginPath();
+		//绘制xy轴
+        xy(400,800,10,context);
+        //描点
+        power(context);
+        //y=x^2
+        context.font="bold 28px Arial";
+        context.fillText("y=x",110,200);
+        context.font="bold 14px Arial";
+        context.fillText("2",135,185);
+        //连线
+		context.stroke();
+
+		function xy(x,y,s,context){
+        // 绘制X轴
+		context.moveTo(0,y/2);
+		context.lineTo(x,y/2);
+		context.lineTo(x-s,y/2-s);
+		context.moveTo(x,y/2);
+        context.lineTo(x-s,y/2+s);
+        //绘制Y轴
+		context.moveTo(x/2,y);
+        context.lineTo(x/2,0);
+        context.lineTo(x/2+s,s);
+        context.moveTo(x/2,0);
+        context.lineTo(x/2-s,s);
+        //标注XY轴
+        context.font="bold 20px Arial";
+        context.textAlign="center";
+        context.textBaseline="midden";
+        context.fillText("x",x-s,y/2+3*s);
+        context.fillText("y",x/2+2*s,2*s);
+        }
+        function power(context){
+       	var x=-2;
+       	  //起始描绘点
+       context.moveTo(100*x+200,400-100*x*x);
+        //下一个描绘点
+       for(var i=1;i<=400;i++){
+       	 x=x+i/100;
+         context.lineTo(100*x+200,400-100*x*x);
+       }
+        }
+    </script>
+</body>
+</html>
+ 

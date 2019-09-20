@@ -1,0 +1,115 @@
+﻿ 
+<!doctype html>
+<html style="height:100%;font-size:14px;">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="spreadjs culture" content="zh-cn" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="styleSheet" href="gc.spread.sheets.excel2013white.12.1.0.css" />
+    <script src="gc.spread.sheets.all.12.1.0.min.js" type="text/javascript"></script> 
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+    <link href="spread/css/gc.spread.sheets.excel2016colorful.11.0.0.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="spread/scripts/gc.spread.sheets.all.11.0.0.min.js"></script>-->
+    <script type="text/javascript" src="spread/scripts/resources/zh/gc.spread.sheets.resources.zh.11.0.0.min.js"></script> 
+</head>
+
+<body style="margin:0;position:absolute;top:0;bottom:0;left:200px;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+
+    <div id="ss" style="width:100%; height:720px;"></div>
+    <script type="text/javascript">
+        window.onload = function () {
+            var spread = new GC.Spread.Sheets.Workbook(document.getElementById('ss'), {
+                sheetCount: 2
+            });  
+            spread.suspendPaint();
+            var sheet = spread.sheets[0];
+            var sheet1 = spread.sheets[1];
+           
+            sheet.options.protectionOptions = {
+                allowResizeColumns: true,
+                allowFilter: true,
+                allowSort: true,
+                rowHeaderVisible: false,
+            };
+            //GC.Spread.Common.CultureManager.culture("zh-cn");
+            sheet.name("����ʵ���¼");
+            sheet1.name("�к�����HIDE");
+        };
+    </script>
+</body>
+
+</html>
+<!--<script type="text/javascript">
+    window.onload = function () {
+        var spread = new GC.Spread.Sheets.Workbook(document.getElementById('ss'), { sheetCount: 2 });
+        var sheet = spread.sheets[0];
+        spread.suspendPaint();
+        initSpread(spread);
+        resetDefaultStyle(sheet);
+        sheet.name("2015��������");
+        sheet.options.protectionOptions = {
+            allowResizeColumns: true,
+            allowFilter: true,
+            allowSort: true,
+            rowHeaderVisible: false,
+        };
+
+        var sheet2 = spread.sheets[1];
+        sheet2.name("�к�����HIDE");
+    };
+    function initSpread(spread) {
+        // give sheet name more space
+        spread.options.setTabStripRatio = 0.8;
+        spread.options.scrollbarMaxAlign = true;
+        spread.options.scrollbarShowMax = true;
+        spread.options.showVerticalScrollbar = false;
+        GC.Spread.Common.CultureManager.culture("zh-cn");
+    }
+    function initSpread1(spread) {
+        var spreadNS = GC.Spread.Sheets;
+        var sheet = spread.getSheet(0);
+        sheet.name('����ʵ�����');
+        sheet.suspendPaint();
+
+        sheet.setValue(2, 1, "name");
+        sheet.setValue(2, 2, "age");
+        sheet.setValue(3, 1, "Jack");
+        sheet.setValue(4, 1, "Lily");
+        sheet.setValue(5, 1, "John");
+        sheet.setValue(6, 1, "Mary");
+        sheet.setValue(3, 2, 19);
+        sheet.setValue(4, 2, 21);
+        sheet.setValue(5, 2, 22);
+        sheet.setValue(6, 2, 25);
+
+        sheet.setText(8, 0, "Average Age:");
+        sheet.setText(9, 0, "Max Age:");
+        sheet.setText(10, 0, "Min Age:");
+        sheet.addSpan(8, 0, 1, 2);
+        sheet.addSpan(9, 0, 1, 2);
+        sheet.addSpan(10, 0, 1, 2);
+
+        sheet.setFormula(8, 2, "=AVERAGE(C4:C7)");
+        sheet.setFormula(9, 2, "=MAX(C4:C7)");
+        sheet.setFormula(10, 2, "=MIN(C4:C7)");
+
+        sheet.resumePaint();
+
+        initsheet2(spread)
+    };
+
+    function resetDefaultStyle(sheet) {
+        // set default style for all cells
+        sheet.defaults.rowHeight = 30;
+        sheet.defaults.colHeaderRowHeight = 30;
+        sheet.defaults.colWidth = 70;
+        var defaultStyle = sheet.getDefaultStyle();
+        defaultStyle.font = '16px ΢���ź�';
+        defaultStyle.vAlign = GC.Spread.Sheets.VerticalAlign.center;
+        defaultStyle.locked = false;
+        sheet.setDefaultStyle(defaultStyle);
+    }
+</script>-->
