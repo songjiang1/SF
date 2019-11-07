@@ -1,0 +1,192 @@
+﻿@using HYSheet.Web.Models
+@model HYSheetTemplateModel
+@{
+    ViewBag.Title = "表格模板管理";
+}
+<div class="layui-body">
+    <div class="layadmin-tabsbody-item layui-show">
+        <div class="layui-card layadmin-header">
+            <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+                <a lay-href="">首页</a><span lay-separator="">/</span>
+                <a><cite>表格管理</cite></a><span lay-separator="">/</span>
+                <a><cite>表格模板管理</cite></a>
+            </div>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-card layui-row">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">模板名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ReloadName" id="ReloadName" placeholder="请输入模板名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">模板类型</label>
+                            <div class="layui-input-inline">
+                                <select name="ReloadHYSheetStyleId" id="ReloadHYSheetStyleId" lay-search="" lay-filter="selected">
+                                    @foreach (var item in Model.SheetTypeList)
+                                    {
+                                    <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ReloadNote" id="ReloadNote" placeholder="请输入备注" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" data-type="search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="LAY_table_user" lay-filter="LAY_table_user"></table>
+                    <script type="text/html" id="toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn" lay-event="add">添加</button>
+                            <button class="layui-btn layui-btn-danger" lay-event="batchdel">删除</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="table-content-list">
+                        <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table,form = layui.form;
+        var form = layui.form;
+      var  tableInsIndex = 0;
+        //方法级渲染
+        var tabcols = [
+            { type: 'checkbox', fixed: 'left' }
+            , { field: 'HYId', title: '唯一标识', fixed: true, sort: true }
+            , { field: 'Name', title: '表名' }
+            , { field: 'HYSheetStyleName', title: '所属类型' }
+            , { field: 'UsedNumber', title: '调用次数' }
+            , { field: 'Note', title: '备注' }
+            , { title: '操作', fixed: 'right', width: 178, align: 'center', toolbar: '#table-content-list' }
+        ];
+        var tabcolsNew = [];
+        for (var i = 0; i < tabcols.length; i++) {
+            if (tabcols[i].field != "UsedNumber" && tabcols[i].field != "Note") {
+                tabcolsNew.push(tabcols[i]);
+            }
+        }
+       var tableIns = table.render({
+            elem: '#LAY_table_user'
+          , url: '/AdminSheetTemplate/ListData/'
+          , cellMinWidth: 80
+          , loading: true
+          , even: true
+          ,toolbar: '#toolbar' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+          , size: 'lg'
+          , cols: [tabcolsNew]
+          , done: function (res, curr, count) {   }
+          , id: 'DataReload'
+          , page: true //开启分页
+        });
+
+        //监听工具条
+        table.on('tool(LAY_table_user)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                window.location.href = "@Url.Action("Template")?HYId=" + data.HYId; //页面跳转
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(LAY_table_user)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'batchdel':
+                    var data = checkStatus.data;
+                    if (data.length === 0) {
+                        return layer.msg('请选择数据');
+                    } else {
+                        layer.confirm('确定删除吗？', function (index) {
+                            //将选中行进行数据组合
+                            var selectedIds = [];
+                            for (var i = 0; i < data.length; i++) {
+                                selectedIds.push(data[i].HYId);
+                            }
+                            //组合传递参数
+                            var postData = {
+                                 idCollection: selectedIds
+                            };
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                dataType: "json",
+                                url: "@Url.Action("Delete")",
+                                data: postData,
+                                success: function (data) {
+                                    if (data.result == "success") {
+                                        table.reload('DataReload');
+                                        layer.msg('已删除');
+                                    } else {
+                                        table.reload('DataReload');
+                                        layer.msg('删除失败');
+                                    }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    table.reload('DataReload');
+                                    layer.msg('删除失败');
+                                },
+                                traditional: true
+                            });
+                        });
+                    }
+                break;
+                case 'add':
+                    window.location.href = "@Url.Action("Template", "AdminSheetTemplate")"; //页面跳转
+                break;
+            };
+        });
+
+        //监听点击事件
+        var $ = layui.$, active = {
+            //查询事件
+            search: function () {
+                var ReloadName = $('#ReloadName');
+                var ReloadNote = $('#ReloadNote');
+                var ReloadHYSheetStyleId = $('#ReloadHYSheetStyleId');
+                //执行重载
+                table.reload('DataReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                  , where: {
+                      Name: ReloadName.val() == null ? "" : ReloadName.val(),
+                      HYSheetStyleId: ReloadHYSheetStyleId.val(),
+                      Note: ReloadNote.val() == null ? "" : ReloadNote.val(),
+                  }
+                });
+            }
+        }
+
+        $('.layui-row .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    $("#AdminSheet").addClass("layui-nav-itemed");
+    $("#AdminSheetTemplate").addClass("layui-nav-itemed");
+    $("#AdminSheetTemplateManage").addClass("layui-nav-itemed");
+    $("#AdminSheetTemplateManage").addClass("layui-this");
+</script>

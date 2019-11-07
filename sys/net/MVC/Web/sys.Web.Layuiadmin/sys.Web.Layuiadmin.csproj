@@ -482,6 +482,7 @@
     <Content Include="Scripts\validate\jquery-validate.js" />
     <Content Include="Scripts\validate\validate-loading.gif" />
     <Content Include="Scripts\validate\validate-sucess.png" />
+    <Content Include="Views\Home\HtmlPage1.html" />
     <Content Include="Web.config" />
     <Content Include="Scripts\layuiadmin\layui\css\font\iconfont.eot" />
     <Content Include="Scripts\layuiadmin\layui\css\font\iconfont.ttf" />
@@ -554,6 +555,8 @@
           <DevelopmentServerPort>56343</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost:44358/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>https://localhost:44358/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
