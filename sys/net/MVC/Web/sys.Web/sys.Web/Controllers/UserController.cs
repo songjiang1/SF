@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace sys.Web.Controllers
 {
-    public class UserController : Controller
+    public class UserController : MvcControllerBase
     {
         // GET: Home
         public ActionResult Login()
